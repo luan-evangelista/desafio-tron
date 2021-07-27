@@ -23,18 +23,34 @@ export default function Home() {
     return `${desc.substring(0, 10)}...`;
   }
 
+  const [searchText, setSearchText] = useState('');
+  const [list, setData] = useState(list);
+
   useEffect(() => {
     personagens();
-  }, []);
-
-  const [data, setData] = useState([]);
+    {
+      if (searchText === '') {
+        setData(list);
+      } else {
+        setData(
+          list.filter(item => {
+            if (item.name.indexOf(searchText) > -1) {
+              return true;
+            } else {
+              return false;
+            }
+          }),
+        );
+      }
+    }
+  }, [searchText]);
 
   async function personagens() {
     const response = await api.get();
     setData(response.data.data.results);
   }
 
-  console.tron.log(data);
+  console.tron.log(list);
 
   return (
     <View style={styles.container}>
@@ -53,15 +69,17 @@ export default function Home() {
         <View style={styles.search}>
           <View style={styles.inputArea}>
             <TextInput
-              placeholder="Qual personagem está procurando?"
               style={styles.input}
+              placeholder="Qual personagem está procurando?"
+              value={searchText}
+              onChangeText={t => setSearchText(t)}
             />
           </View>
         </View>
       </View>
 
       <FlatList
-        data={data}
+        data={list}
         numColumns={2}
         renderItem={({item}) => {
           return (
