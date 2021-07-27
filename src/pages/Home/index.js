@@ -67,7 +67,7 @@ export default function Home() {
           return (
             <TouchableOpacity
               style={styles.container}
-              onPress={() => navigation.navigate('Detail')}>
+              onPress={() => navigation.navigate('Detail', {hero: item})}>
               <Image
                 style={styles.shoesImg}
                 source={{

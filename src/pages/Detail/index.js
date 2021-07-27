@@ -1,51 +1,20 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Button, ScrollView, Image, Dimensions, Text} from 'react-native';
 
-import Button from '../../components/Button';
-// import Form from '../../components/Form';
+const SCREEN_WIDTH = Dimensions.get('screen').width;
 
-export default function Detail() {
-  return (
-    <ScrollView style={styles.container}>
-      <Image
-        source={require('../../assets/banner.jpg')}
-        style={styles.image}
-        resizeMode="cover"
-      />
-
-      <View>
-        <View>
-          <Text style={[styles.title, {fontSize: 30}]}>Nome</Text>
-        </View>
-        <View opacity={0.4}>
-          <Text style={[styles.title, {fontSize: 24}]}>Informações</Text>
-        </View>
-      </View>
-
-      {/* <Form /> */}
-
-      <Button />
-    </ScrollView>
-  );
+export default class Detail extends Component {
+  render() {
+    const {hero} = this.props.route.params;
+    return (
+      <ScrollView>
+        <Image
+          source={{uri: `${hero.thumbnail.path}.${hero.thumbnail.extension}`}}
+          style={{width: SCREEN_WIDTH, height: SCREEN_WIDTH}}
+        />
+        <Text style={{padding: 10, fontSize: 20}}>{hero.name}</Text>
+        <Text style={{padding: 10}}>{hero.description}</Text>
+      </ScrollView>
+    );
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: '#FFF',
-  },
-  image: {
-    width: '100%',
-  },
-  title: {
-    paddingHorizontal: '2%',
-  },
-});
