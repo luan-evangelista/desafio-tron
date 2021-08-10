@@ -11,6 +11,8 @@ import {
 import {useNavigation} from '@react-navigation/native';
 
 import api from '../../services/api';
+import {getHeros} from '../../requests';
+import {useDispatch, useSelector} from 'react-redux';
 
 export default function Home() {
   const navigation = useNavigation();
@@ -25,6 +27,8 @@ export default function Home() {
 
   const [searchText, setSearchText] = useState('');
   const [list, setData] = useState(list);
+  const dispatch = useDispatch();
+  const heroReducer = useSelector(state => state.hero);
 
   useEffect(() => {
     personagens();
@@ -45,12 +49,9 @@ export default function Home() {
     }
   }, [searchText]);
 
-  async function personagens() {
-    const response = await api.get();
-    setData(response.data.data.results);
+  function personagens() {
+    dispatch(getHeros());
   }
-
-  console.tron.log(list);
 
   return (
     <View style={styles.container}>
@@ -79,7 +80,7 @@ export default function Home() {
       </View>
 
       <FlatList
-        data={list}
+        data={heroReducer.list}
         numColumns={2}
         renderItem={({item}) => {
           return (
