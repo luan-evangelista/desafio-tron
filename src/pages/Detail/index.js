@@ -1,72 +1,85 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {
-  Button,
   StyleSheet,
   ScrollView,
   Image,
   Dimensions,
-  Text,
   TextInput,
   View,
   TouchableOpacity,
 } from 'react-native';
-
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useDispatch} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+
+import {editCharacter} from '../../store/modules/heros/actions';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
-export default class Detail extends Component {
-  render() {
-    const {hero} = this.props.route.params;
-    return (
-      <ScrollView>
-        <Image
-          source={{uri: `${hero.thumbnail.path}.${hero.thumbnail.extension}`}}
-          style={{width: SCREEN_WIDTH, height: SCREEN_WIDTH}}
+export default function Detail({route}) {
+  const {hero} = route.params;
+
+  const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+  const [isEditable, setIsEditable] = useState(false);
+  const [text, onChangeText] = useState(hero.name);
+
+  const onSubmit = data => {
+    setIsEditable(false);
+    dispatch(editCharacter({...data, name: text}));
+  };
+
+  return (
+    <ScrollView>
+      <Image
+        source={{uri: `${hero.thumbnail.path}.${hero.thumbnail.extension}`}}
+        style={{width: SCREEN_WIDTH, height: SCREEN_WIDTH}}
+      />
+
+      <TextInput
+        onChangeText={onChangeText}
+        value={text}
+        style={[styles.text, {color: '#000'}]}
+      />
+
+      <View style={styles.line} />
+
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={{
+            right: 0,
+            alignSelf: 'center',
+            marginVertical: '2%',
+          }}
+          onPress={() => onSubmit(hero)}>
+          <Icon name="save" size={30} />
+        </TouchableOpacity>
+
+        <Icon
+          style={{
+            right: 0,
+            alignSelf: 'center',
+            marginVertical: '2%',
+          }}
+          name="podcast"
+          size={30}
+          onPress={() => navigation.navigate('Web', {hero})}
         />
-        <TextInput style={[styles.text, {color: '#000'}]}>
-          {hero.name}
-        </TextInput>
 
-        <View style={styles.line} />
-
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={{
-              right: 0,
-              alignSelf: 'center',
-              marginVertical: '2%',
-            }}>
-            <Icon name="save" size={30} />
-          </TouchableOpacity>
-
-          <Icon
-            style={{
-              right: 0,
-              alignSelf: 'center',
-              marginVertical: '2%',
-            }}
-            name="podcast"
-            size={30}
-            onPress={() =>
-              this.props.navigation.navigate('Web', {link: hero.urls})
-            }
-          />
-
-          <Icon
-            style={{
-              right: 0,
-              alignSelf: 'center',
-              marginVertical: '2%',
-            }}
-            name="reply-all"
-            size={30}
-            onPress={() => this.props.navigation.navigate('Home')}
-          />
-        </View>
-      </ScrollView>
-    );
-  }
+        <Icon
+          style={{
+            right: 0,
+            alignSelf: 'center',
+            marginVertical: '2%',
+          }}
+          name="reply-all"
+          size={30}
+          onPress={() => navigation.navigate('Home')}
+        />
+      </View>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({

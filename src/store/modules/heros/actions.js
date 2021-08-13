@@ -11,3 +11,16 @@ export function setList(lista) {
     payload: lista,
   };
 }
+
+export const editCharacter = character => async (dispatch, getState) => {
+  const {list} = getState().hero;
+  const newList = list.map(item => {
+    if (item.id === character.id)
+      return {
+        ...item,
+        name: character.name,
+      };
+    return item;
+  });
+  dispatch(setList(newList));
+};

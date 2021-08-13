@@ -1,12 +1,7 @@
-import React, {Component} from 'react';
-import {ActivityIndicator} from 'react-native';
+import React from 'react';
 import {WebView} from 'react-native-webview';
 
-export default class Web extends Component {
-  render() {
-    const link = this.props.route.params.link[1].url;
-    return (
-      <WebView source={{uri: link}} style={{flex: 1}} startInLoadingState />
-    );
-  }
+export default function Web({route}) {
+  const link = route.params.hero.urls[0].url;
+  return <WebView source={{uri: link}} style={{flex: 1}} startInLoadingState />;
 }

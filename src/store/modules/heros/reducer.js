@@ -2,6 +2,7 @@ const initialState = {
   name: '',
   nickname: '',
   list: [],
+  character: {},
 };
 
 export default (state = initialState, action) => {

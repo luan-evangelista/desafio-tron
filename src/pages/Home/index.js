@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import api from '../../services/api';
 import {getHeros} from '../../requests';
 import {useDispatch, useSelector} from 'react-redux';
 
