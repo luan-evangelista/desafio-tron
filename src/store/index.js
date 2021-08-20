@@ -1,7 +1,10 @@
-import {createStore} from 'redux';
+import {applyMiddleware, compose, createStore} from 'redux';
+import rootReducer from '././rootReducer';
+import thunk from 'redux-thunk';
+import promise from 'redux-promise';
+import reactoTron from '../config/ReactotronConfig';
 
-import rootReducer from './modules/rootReducer';
-
-const store = createStore(rootReducer);
+const middlewares = applyMiddleware(thunk, promise);
+const store = createStore(rootReducer, middlewares);
 
 export default store;

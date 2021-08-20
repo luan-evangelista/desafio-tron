@@ -34,10 +34,8 @@ import store from './src/store';
 
 export default function App() {
   return (
-    <>
-      <Provider store={store}>
-        <Routes />
-      </Provider>
-    </>
+    <Provider store={store}>
+      <Routes />
+    </Provider>
   );
 }

@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   TextInput,
@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import api from '../../services/api';
+import {getHeros} from '../../requests';
+import {useDispatch, useSelector} from 'react-redux';
 
 export default function Home() {
   const navigation = useNavigation();
@@ -23,18 +24,33 @@ export default function Home() {
     return `${desc.substring(0, 10)}...`;
   }
 
+  const [searchText, setSearchText] = useState('');
+  const [list, setData] = useState(list);
+  const dispatch = useDispatch();
+  const heroReducer = useSelector(state => state.hero);
+
   useEffect(() => {
     personagens();
-  }, []);
+    {
+      if (searchText === '') {
+        setData(list);
+      } else {
+        setData(
+          list.filter(item => {
+            if (item.name.indexOf(searchText) > -1) {
+              return true;
+            } else {
+              return false;
+            }
+          }),
+        );
+      }
+    }
+  }, [searchText]);
 
-  const [data, setData] = useState([]);
-
-  async function personagens() {
-    const response = await api.get();
-    setData(response.data.data.results);
+  function personagens() {
+    dispatch(getHeros());
   }
-
-  console.tron.log(data);
 
   return (
     <View style={styles.container}>
@@ -53,21 +69,23 @@ export default function Home() {
         <View style={styles.search}>
           <View style={styles.inputArea}>
             <TextInput
-              placeholder="Qual personagem está procurando?"
               style={styles.input}
+              placeholder="Qual personagem está procurando?"
+              value={searchText}
+              onChangeText={t => setSearchText(t)}
             />
           </View>
         </View>
       </View>
 
       <FlatList
-        data={data}
+        data={heroReducer.list}
         numColumns={2}
         renderItem={({item}) => {
           return (
             <TouchableOpacity
               style={styles.container}
-              onPress={() => navigation.navigate('Detail')}>
+              onPress={() => navigation.navigate('Detail', {hero: item})}>
               <Image
                 style={styles.shoesImg}
                 source={{
